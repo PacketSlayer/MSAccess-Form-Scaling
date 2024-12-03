@@ -57,7 +57,6 @@ Public Sub MeasureForm(frm As Form)
         Set CurrentControl = Nothing
         '//Grab measurements for the controls of the form
         '//if it exists (and it should)
-        Call batchfilescommon.appdrawer(False, frm)
         For Each ctrl In frm.Controls
             With ctrl
                 Set CurrentControl = New ScaleFormControls
@@ -72,16 +71,13 @@ Public Sub MeasureForm(frm As Form)
                 Set CurrentControl = Nothing
            End With
         Next
-        Call batchfilescommon.appdrawer(True, frm)
         Set ctrl = Nothing
     End If
     db.Close
     Set db = Nothing
     Exit Sub
 errorhandle:
-    Call errorh.errorhandler(Err.Number, Err.Description, "clsWindow", "MeasureForm")
     Err.Clear
-    Resume Next
 End Sub
 
 Public Sub ScaleForm(frm As Form, Optional scaleproportionally, Optional paint)
@@ -94,11 +90,10 @@ Public Sub ScaleForm(frm As Form, Optional scaleproportionally, Optional paint)
     Dim ScaleXaxis As Single
     Dim ScaleYaxis As Single
     Dim dsf As Single
-    If paint = True Then Call batchfilescommon.appdrawer(False, frm)
     Set db = CurrentDb
     '// select scaling type
     If db.Properties("AllowBypassKey") = False Then
-        frm.Painting = False
+        frm.Painting = paint
         Select Case scaleproportionally
             Case 0
                 ScaleXaxis = 1
@@ -132,10 +127,10 @@ Public Sub ScaleForm(frm As Form, Optional scaleproportionally, Optional paint)
                 frm.DatasheetFontHeight = dsf
             End With
         Next
-        If paint = True Then Call batchfilescommon.appdrawer(True, frm)
         Set ctrl = Nothing
     End If
     db.Close
+    frm.Painting = paint
     Set db = Nothing
     Exit Sub
 errorhandle:
