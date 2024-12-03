@@ -16,7 +16,5 @@ Private Sub Form_Unload(Cancel As Integer)
     Set window = Nothing
     Exit Sub
 ERRORS:
-    Call errorh.errorhandler(Err.Number, Err.Description, Me.name, "Form_unload")
     Err.Clear
-    Resume Next
 End Sub
